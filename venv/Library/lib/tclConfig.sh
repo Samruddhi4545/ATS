@@ -52,11 +52,11 @@ TCL_LIBS='kernel32.lib advapi32.lib netapi32.lib user32.lib userenv.lib ws2_32.l
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
-TCL_PREFIX='C:/Users/Samruddhi pai/venv\Library'
+TCL_PREFIX='C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library'
 
 # Top-level directory in which Tcl's platform-specific files (e.g.
 # executables) are installed.
-TCL_EXEC_PREFIX='C:/Users/Samruddhi pai/venv\Library\bin'
+TCL_EXEC_PREFIX='C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\bin'
 
 # Flags to pass to cc when compiling the components of a shared library:
 TCL_SHLIB_CFLAGS=''
@@ -112,11 +112,11 @@ TCL_BUILD_LIB_SPEC='C:\b\abs_933obpeb5t\croot\tk_1755243793210\work\tcl8.6.15\wi
 
 # String to pass to linker to pick up the Tcl library from its
 # installed directory.
-TCL_LIB_SPEC='C:/Users/Samruddhi pai/venv\Library\lib\tcl86t.lib'
+TCL_LIB_SPEC='C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\lib\tcl86t.lib'
 
 # String to pass to the compiler so that an extension can
 # find installed Tcl headers.
-TCL_INCLUDE_SPEC='-IC:/Users/Samruddhi pai/venv\Library\include'
+TCL_INCLUDE_SPEC='-IC:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\include'
 
 # Indicates whether a version numbers should be used in -l switches
 # ("ok" means it's safe to use switches like -ltcl7.5;  "nodots" means
@@ -148,7 +148,7 @@ TCL_SRC_DIR='C:\b\abs_933obpeb5t\croot\tk_1755243793210\work\tcl8.6.15\win\..'
 # List of standard directories in which to look for packages during
 # "package require" commands.  Contains the "prefix" directory plus also
 # the "exec_prefix" directory, if it is different.
-TCL_PACKAGE_PATH='C:/Users/Samruddhi pai/venv\Library\lib'
+TCL_PACKAGE_PATH='C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\lib'
 
 # Tcl supports stub.
 TCL_SUPPORTS_STUBS=1
@@ -165,13 +165,13 @@ TCL_BUILD_STUB_LIB_SPEC='-LC:\b\abs_933obpeb5t\croot\tk_1755243793210\work\tcl8.
 
 # String to pass to linker to pick up the Tcl stub library from its
 # installed directory.
-TCL_STUB_LIB_SPEC='-LC:/Users/Samruddhi pai/venv\Library\lib tclstub86.lib'
+TCL_STUB_LIB_SPEC='-LC:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\lib tclstub86.lib'
 
 # Path to the Tcl stub library in the build directory.
 TCL_BUILD_STUB_LIB_PATH='C:\b\abs_933obpeb5t\croot\tk_1755243793210\work\tcl8.6.15\win\Release_AMD64_VC1929\tclstub86.lib'
 
 # Path to the Tcl stub library in the install directory.
-TCL_STUB_LIB_PATH='C:/Users/Samruddhi pai/venv\Library\lib\tclstub86.lib'
+TCL_STUB_LIB_PATH='C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv\Library\lib\tclstub86.lib'
 
 # Flag, 1: we built Tcl with threads enabled, 0 we didn't
 TCL_THREADS=1

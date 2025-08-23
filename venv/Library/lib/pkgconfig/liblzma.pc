@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: 0BSD
 # Author: Lasse Collin
 
-prefix=C:/Users/Samruddhi pai/venv/Library
+prefix=C:/Users/Samruddhi pai/Desktop/Git_demo/ATS/venv/Library
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
