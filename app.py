@@ -4,6 +4,7 @@ from dotenv import load_dotenv #type:ignore
 load_dotenv()
 import streamlit as st
 import os 
+import pdf2image
 from PIL import Image
 import google.generativeai as genai #type :ignore
 
