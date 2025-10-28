@@ -3,7 +3,7 @@ import io
 from dotenv import load_dotenv #type:ignore
 load_dotenv()
 import streamlit as st
-import os 
+import os
 from PIL import Image
 import google.generativeai as genai #type :ignore
 
@@ -45,9 +45,9 @@ submit3=st.button("what are the KEYWORDS that are missing")
 submit4=st.button("Percentage match")
 
 input_prompt1 = """
- You are an experienced HR, your task is to review the provided resume against the job description. 
-  Please share your professional evaluation on whether the candidate's profile aligns with the role. 
- Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements.
+You are an experienced HR, your task is to review the provided resume against the job description. 
+Please share your professional evaluation on whether the candidate's profile aligns with the role. 
+Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements.
 """
 
 input_prompt3 = """
