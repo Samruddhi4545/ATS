@@ -140,7 +140,7 @@ def input_pdf_setup(uploaded_file):
 # --- STREAMLIT APP ---
     
 st.set_page_config(page_title="Classical ATS Expert", layout="wide")
-st.header(" Classical ATS Tracking System (Non-LLM)")
+st.header("ATS Tracking System (Non-LLM)")
 
 # --- USER INPUTS ---
 input_text = st.text_area("Job Description: ", key='input', height=200,help="Paste the full job description here.")
@@ -165,7 +165,7 @@ with col2:
 if submit_full_report:
     if uploaded_files and input_text:
         for i, file in enumerate(uploaded_files):
-            st.markdown(f"<h3 style='color: #007BFF;'>--- 📄 Analyzing Resume {i+1}: {file.name} ---</h3>", unsafe_allow_html=True) 
+            st.markdown(f"<h3 style='color: #007BFF;'>--- Analyzing Resume {i+1}: {file.name} ---</h3>", unsafe_allow_html=True) 
 
             with st.spinner(f'Analyzing {file.name} using Classical ML/NLP...'):
                 try:
