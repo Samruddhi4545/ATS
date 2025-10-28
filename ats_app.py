@@ -14,8 +14,8 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 # --- NLTK & Global Setup ---
 # Classical NLP needs to download resource files like stopwords
 try:
-    nltk.data.find('corpora/stopwords')
-except nltk.downloader.DownloadError:
+    nltk.data.find('corpora/stopwords') # Check if stopwords are already downloaded
+except LookupError: # Catch LookupError if the resource is not found
     nltk.download('stopwords')
 STOPWORDS = set(stopwords.words('english'))
 
