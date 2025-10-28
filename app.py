@@ -73,8 +73,6 @@ elif uploaded_files is None:
     st.write("Please upload one or more resumes to begin.")
 
 
-# --- PROMPT DEFINITIONS ---
-
 # Prompt for professional HR evaluation
 input_prompt1 = """
 You are an experienced HR professional. Your task is to review the provided resume against the job description. 
