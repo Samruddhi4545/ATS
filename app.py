@@ -11,13 +11,13 @@ import pdf2image #type: ignore
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_gemini_response(input,pdf_content,prompt):
-    model=genai.GenerativeModel('gemini-pro-vision')
+    model=genai.GenerativeModel('gemini-1.0-pro-vision-latest')
     response=model.generate_content([input,pdf_content[0],prompt])
     return response.text
 
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
-        image=pdf2image.convert_from_bytes(uploaded_file.read())
+        image=pdf2image.convert_from_bytes(uploaded_file.read(), poppler_path=None, first_page=1, last_page=1)
         first_page=image[0]
         img_bytes_arr=io.BytesIO()
         first_page.save(img_bytes_arr,format='JPEG')
