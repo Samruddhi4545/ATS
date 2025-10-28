@@ -51,6 +51,18 @@ Please share your professional evaluation on whether the candidate's profile ali
 Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements.
 """
 
+input_prompt2 = """
+You are a career coach and your task is to review the provided resume against the job description.
+Based on the analysis, provide actionable advice on how the candidate can improve their skills and experience to be a better fit for the role.
+Suggest specific courses, certifications, or projects they could undertake.
+"""
+
+input_prompt4 = """
+As a highly advanced ATS, your sole function is to calculate the percentage match between the resume and the job description.
+Provide only a single numerical value representing the percentage match. For example: "87%".
+Do not provide any explanations, keywords, or additional text.
+"""
+
 input_prompt3 = """
 You are an skilled ATS (Applicant Tracking System) scanner with a deep understanding of data science and ATS functionality, 
 your task is to evaluate the resume against the provided job description. give me the percentage of match if the resume matches
@@ -66,10 +78,28 @@ if submit1:
     else:
         st.write("Please uplaod the resume")
 
+elif submit2:
+    if uploaded_file is not None:
+        pdf_content=input_pdf_setup(uploaded_file)
+        response=get_gemini_response(input_prompt2,pdf_content,input_text)
+        st.subheader("The Repsonse is")
+        st.write(response)
+    else:
+        st.write("Please uplaod the resume")
+
 elif submit3:
     if uploaded_file is not None:
         pdf_content=input_pdf_setup(uploaded_file)
         response=get_gemini_response(input_prompt3,pdf_content,input_text)
+        st.subheader("The Repsonse is")
+        st.write(response)
+    else:
+        st.write("Please uplaod the resume")
+
+elif submit4:
+    if uploaded_file is not None:
+        pdf_content=input_pdf_setup(uploaded_file)
+        response=get_gemini_response(input_prompt4,pdf_content,input_text)
         st.subheader("The Repsonse is")
         st.write(response)
     else:
