@@ -124,6 +124,7 @@ def input_pdf_setup(uploaded_file):
         try:
             # 1. Convert PDF page to image (CV Pre-processing)
             # The .read() function must be called inside the loop or function that processes the file
+            uploaded_file.seek(0) # Reset file pointer to the beginning
             image = pdf2image.convert_from_bytes(uploaded_file.read(), first_page=1, last_page=1)[0]
             
             # 2. Use Tesseract (OCR) to extract text
