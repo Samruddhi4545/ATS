@@ -91,12 +91,16 @@ Please structure your output **strictly** into three markdown sections:
 2.  **Missing Keywords:** List 3-5 critical keywords or skills from the Job Description that are missing or underrepresented in the Resume.
 3.  **Actionable Summary:** Provide a final, brief summary (3-4 bullet points) on how the candidate can improve their resume specifically for THIS job description.
 """
-
+input_prompt_percentage_only = """
+As a highly advanced ATS, your sole function is to calculate the percentage match between the resume and the job description.
+Provide **ONLY** a single numerical value representing the percentage match, followed by the '%' sign.
+For example: "87%". Do not provide any explanations, keywords, or additional text.
+"""
 
 # --- SUBMISSION LOGIC ---
 
 submit_report = st.button("Generate Full Report for All Resumes", type="primary") 
-
+submit_percentage=st.button("Percentage compare")
 
 if submit_report:
     if uploaded_files and input_text:
