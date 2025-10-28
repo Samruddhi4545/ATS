@@ -41,7 +41,6 @@ if uploaded_file is not None:
     st.write("PDF Uploaded Successfully")
 
 submit1=st.button("Tell me about the Resume")
-submit2=st.button("How can I Improvise my skills")
 submit3=st.button("what are the KEYWORDS that are missing")
 submit4=st.button("Percentage match")
 
@@ -51,11 +50,6 @@ Please share your professional evaluation on whether the candidate's profile ali
 Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements.
 """
 
-input_prompt2 = """
-You are a career coach and your task is to review the provided resume against the job description.
-Based on the analysis, provide actionable advice on how the candidate can improve their skills and experience to be a better fit for the role.
-Suggest specific courses, certifications, or projects they could undertake.
-"""
 
 input_prompt4 = """
 As a highly advanced ATS, your sole function is to calculate the percentage match between the resume and the job description.
