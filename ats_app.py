@@ -156,9 +156,9 @@ uploaded_files = st.file_uploader(
 # --- SUBMISSION BUTTONS (COLORIZED) ---
 col1, col2 = st.columns(2)
 with col1:
-    submit_full_report = st.button("Generate Full Report for All Resumes", type="primary") 
+    submit_full_report = st.button("Generate Full Report for All Resumes")
 with col2:
-    submit_summary_table = st.button("Generate Percentage Summary Table", type="secondary")
+    submit_summary_table = st.button("Generate Percentage Summary Table")
 
 # --- MAIN LOGIC ---
 
