@@ -99,7 +99,7 @@ For example: "87%". Do not provide any explanations, keywords, or additional tex
 
 # --- SUBMISSION LOGIC ---
 
-submit_report = st.button("Generate Full Report for All Resumes", type="primary") 
+submit_report = st.button("Generate Full Report for All Resumes")
 submit_percentage=st.button("Percentage compare")
 
 if submit_report:
@@ -131,3 +131,45 @@ if submit_report:
                     
     else:
         st.warning("Please upload at least one resume and provide a Job Description before generating reports.")
+elif submit_percentage:
+    if uploaded_files and input_text:
+        st.subheader(" Resume Match Percentage Summary")
+        
+        # List to store data for the final table
+        summary_data = []
+        
+        with st.spinner('Generating summary table...'):
+            for i, file in enumerate(uploaded_files):
+                st.info(f"Processing Resume {i+1}: {file.name}")
+                try:
+                    pdf_content = input_pdf_setup(file)
+                    
+                    # Use the strict percentage-only prompt
+                    percentage_response = get_gemini_response(input_prompt_percentage_only, pdf_content, input_text)
+                    
+                    # Clean up the response to ensure only the percentage string is taken
+                    match_percentage = percentage_response.strip().split('\n')[0]
+                    
+                    summary_data.append({
+                        "Resume Number": i + 1,
+                        "Resume File Name": file.name,
+                        "Match Percentage": match_percentage
+                    })
+                    
+                except Exception as e:
+                    st.warning(f"Could not process **{file.name}**. Skipping in summary. (Error: {e})")
+                    summary_data.append({
+                        "Resume Number": i + 1,
+                        "Resume File Name": file.name,
+                        "Match Percentage": "Error"
+                    })
+
+            # Display the final table using st.dataframe
+            if summary_data:
+                st.dataframe(summary_data, use_container_width=True)
+                st.success("Summary table generated successfully.")
+            else:
+                st.error("No valid resumes were processed to generate the summary.")
+
+    else:
+        st.warning("Please upload at least one resume and provide a Job Description.")
