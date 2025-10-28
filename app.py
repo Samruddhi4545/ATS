@@ -6,6 +6,7 @@ import streamlit as st
 import os
 from PIL import Image
 import google.generativeai as genai #type :ignore
+import pdf2image #type: ignore
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
@@ -23,7 +24,7 @@ def input_pdf_setup(uploaded_file):
         img_bytes_arr=img_bytes_arr.getvalue()
         pdf_parts=[
             {
-                "nime_type":"image/jpeg",
+                "mime_type":"image/jpeg",
                 "data":base64.b64encode(img_bytes_arr).decode()
             }
         ]
