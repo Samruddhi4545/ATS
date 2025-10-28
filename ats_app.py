@@ -4,11 +4,11 @@ import os
 import re
 from PIL import Image
 import pdf2image # For PDF to image conversion (CV pre-processing)
-import pytesseract # For Optical Character Recognition (OCR/CV)
-from sklearn.feature_extraction.text import TfidfVectorizer # For NLP/ML
-from sklearn.metrics.pairwise import cosine_similarity # For ML match score
-import nltk
-from nltk.corpus import stopwords
+import pytesseract # For Optical Character Recognition (OCR/CV)#type:ignore
+from sklearn.feature_extraction.text import TfidfVectorizer # For NLP/ML#type:ignore
+from sklearn.metrics.pairwise import cosine_similarity # For ML match score#type:ignore
+import nltk#type:ignore
+from nltk.corpus import stopwords#type:ignore
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # --- NLTK & Global Setup ---
