@@ -225,6 +225,9 @@ elif submit_summary_table:
                 
                 # 1. Sort the DataFrame by percentage match (Highest to Lowest)
                 df_sorted = df.sort_values(by="Match Percentage(%)", ascending=False).reset_index(drop=True)
+                if 'top_n_candidates' not in st.session_state:
+                    # Set a sensible default value (e.g., top 10, or max available)
+                    st.session_state['top_n_candidates'] = min(10, len(df_sorted))
                 
                 # 2. Add Filter Control
                 st.markdown("---")
@@ -237,8 +240,9 @@ elif submit_summary_table:
                     "Show Top N Candidates:",
                     min_value=1,
                     max_value=len(df_sorted),
-                    value=min(10, len(df_sorted)), # Default to showing max 10
-                    step=1
+                    value=st.session_state['top_n_candidates'],
+                    step=1,
+                    key='top_n_candidates'
                 )
                 
                 # 3. Apply the Top N Filter
