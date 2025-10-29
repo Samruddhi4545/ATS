@@ -10,16 +10,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer#type:ignore
 from sklearn.metrics.pairwise import cosine_similarity#type:ignore
 import nltk#type:ignore
 from nltk.corpus import stopwords#type:ignore
-from nltk.stem import PorterStemmer # NEW IMPORT for stemming#type:ignore
+from nltk.stem import PorterStemmer # IMPORT for stemming#type:ignore
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Configure Tesseract path (required for Windows)
+# Configure Tesseract path
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# --- NLTK & Global Setup (for Accuracy) ---
+# NLTK
 try:
-    # Check and download necessary NLTK resources
     nltk.data.find('corpora/stopwords')
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -29,17 +28,15 @@ except LookupError:
 STOPWORDS = set(stopwords.words('english'))
 # Initialize Stemmer for linguistic normalization
 STEMMER = PorterStemmer()
-# Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
-# Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
 CRITICAL_KEYWORDS = {
     "DATA_STORAGE": ["sql", "database", "mongodb", "mysql", "nosql"],
     "AGILE_METHOD": ["scrum", "agile", "kanban", "sprint"],
     "JAVAFX_UI": ["java", "javafx", "fxml", "gui", "swing"],
     "CLOUD_OPS": ["aws", "cloud", "docker", "kubernetes", "azure"]
 }
-GROUP_BONUS = 50 # A major score boost per category
+GROUP_BONUS = 50
 
-# --- UTILITY FUNCTIONS ---
+#UTILITY FUNCTIONS
 
 def custom_button(label, key, color="#1E88E5", hover_color="#1565C0"):
     """Generates a custom-styled, interactive button using HTML and CSS."""
@@ -70,21 +67,17 @@ def custom_button(label, key, color="#1E88E5", hover_color="#1565C0"):
     <div id="{unique_id}">
     </div>
     """, unsafe_allow_html=True)
-    # Streamlit requires the st.button call to manage the state
     return st.button(label, key=key, use_container_width=True)
 
 def preprocess_text(text):
     """Clean text: lowercase, remove non-alphanumeric, remove stopwords, and ADD STEMMING (Accuracy Boost)."""
     text = text.lower()
-    # Remove punctuation and special characters
     text = re.sub(r'[^a-z0-9\s]', '', text)
     tokens = text.split()
     
-    # Filter stopwords and short words
+    # stopwords
     tokens = [word for word in tokens if word not in STOPWORDS and len(word) > 2]
     
-    # --- ACCURACY BOOST: STEMMING ---
-    # Normalize words to their root form (e.g., 'running' -> 'run')
     tokens = [STEMMER.stem(word) for word in tokens]
     
     return ' '.join(tokens)
@@ -100,18 +93,16 @@ def calculate_match_percentage(resume_text, job_description):
     
     documents = [processed_resume, processed_jd]
     
-    # --- ACCURACY BOOST: N-GRAMS & FEATURE CAPACITY ---
     vectorizer = TfidfVectorizer(
-        max_features=5000, # Increased capacity
-        ngram_range=(1, 3) # Capture single words and two-word phrases (e.g., 'deep learning')
+        max_features=5000,
+        ngram_range=(1, 3)
     )
     tfidf_matrix = vectorizer.fit_transform(documents)
     
-    # ML: Calculate Cosine Similarity (Base Percentage)
+    # ML Cosine Similarity
     similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
     base_percentage = round(similarity_score * 100)
     
-    # --- ACCURACY BOOST: HYBRID SCORING (KEYWORD BOOST) ---
     resume_processed_words = set(processed_resume.split())
     
     group_hits = 0
@@ -123,17 +114,14 @@ def calculate_match_percentage(resume_text, job_description):
             for keyword in keywords:
                 if STEMMER.stem(keyword.lower()) in resume_processed_words:
                     group_hits += 1
-                    found_groups.add(group_name) # Ensures we only count one bonus per category
+                    found_groups.add(group_name)#one bonus per category
                     break
 
-    # Now, calculate bonus based on group hits, not individual word hits
-    # This rewards candidates who demonstrate skills in a required domain.
     bonus_score = group_hits * GROUP_BONUS
 
-    # Calculate Final Percentage (max 100)
     final_percentage = min(100, base_percentage + bonus_score)
 
-    # --- Keyword Extraction ---
+    #Keyword Extraction
     feature_names = vectorizer.get_feature_names_out()
     jd_vector = tfidf_matrix[1].toarray()[0]
     top_jd_indices = jd_vector.argsort()[-20:][::-1]
@@ -144,20 +132,19 @@ def calculate_match_percentage(resume_text, job_description):
     
     return final_percentage, top_jd_keywords
 
-# (Your existing create_ats_report and create_hr_review functions go here, they use calculate_match_percentage)
 def create_ats_report(resume_text, job_description):
     """Creates a basic ATS-style report using deterministic NLP and ML scores."""
     
     percentage, top_jd_keywords = calculate_match_percentage(resume_text, job_description)
     
-    # Identify missing keywords based on top JD terms
+    # Identify missing keywords
     resume_processed_words = set(preprocess_text(resume_text).split())
     missing_keywords = [
         word for word in top_jd_keywords
         if word not in resume_processed_words and len(word) > 3
     ][:5]
     
-    # --- Report Formatting (Replaces LLM Text Generation) ---
+    #Report Formatting
     report = f"**Percentage Match:** {percentage}%\n\n"
     
     report += "**Missing Keywords (Top 5 based on TF-IDF):**\n"
@@ -181,7 +168,6 @@ def create_hr_review(resume_text, job_description):
     
     review = "**Professional Evaluation (Rule-Based Approximation):**\n\n"
     
-    # Check Alignment (uses ML score)
     percentage, _ = calculate_match_percentage(resume_text, job_description)
     
     review += f"- **Alignment Score**: {percentage}%\n"
@@ -191,11 +177,9 @@ def create_hr_review(resume_text, job_description):
     elif percentage < 50:
         review += "- **Weakness**: The resume lacks specific details and terminology to pass a manual HR review easily.\n"
         
-    # Check for keywords like "management", "leadership", etc.
     if re.search(r'leadership|management|senior', resume_text, re.IGNORECASE):
           review += "- **Strength**: Leadership/Management experience keywords are present.\n"
     
-    # Check for length (a proxy for detail)
     if len(resume_text.split()) < 300:
         review += "- **Weakness**: Resume is short. Consider adding more measurable achievements (metrics, numbers).\n"
     
@@ -205,13 +189,12 @@ def input_pdf_setup(uploaded_file):
     """Converts the uploaded PDF to raw text using OCR."""
     if uploaded_file is not None:
         try:
-            # 1. Convert PDF page to image (CV Pre-processing)
-            uploaded_file.seek(0) # Reset file pointer to the beginning
-            # Use a higher DPI for better OCR results
+            # Convert PDF page to image (CV Pre-processing)
+            uploaded_file.seek(0)
+            
             image = pdf2image.convert_from_bytes(uploaded_file.read(), first_page=1, last_page=1, dpi=300)[0]
             
-            # 2. Use Tesseract (OCR) to extract text
-            # Use 'eng' language for English, or adjust if needed
+            # Using Tesseract (OCR) to extract text
             resume_text = pytesseract.image_to_string(image, lang='eng')
             return resume_text
         except Exception as e:
@@ -220,12 +203,10 @@ def input_pdf_setup(uploaded_file):
     else:
         raise FileNotFoundError("No file uploaded")
     
-# --- STREAMLIT APP ---
     
 st.set_page_config(page_title="Classical ATS Expert", layout="wide")
 st.header("ATS Tracking System (Non-LLM)")
 
-# --- USER INPUTS ---
 input_text = st.text_area("Job Description: ", key='input', height=200,help="Paste the full job description here.")
 
 uploaded_files = st.file_uploader(
@@ -236,11 +217,9 @@ uploaded_files = st.file_uploader(
     help="You can drag and drop multiple resumes here."
 )
 
-# --- SUBMISSION BUTTONS (3-Column Layout with Custom Style) ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    # Custom-styled button for the primary action
     submit_full_report = custom_button(
         label="1. Generate FULL Candidate Reports",
         key="full_report_btn",
@@ -249,7 +228,6 @@ with col1:
     )
 
 with col2:
-    # Standard Streamlit button
     submit_summary_table = st.button(
         "2. Generate Top Candidate Table",
         type="secondary",
@@ -258,7 +236,6 @@ with col2:
     )
 
 with col3:
-    # Standard Streamlit button for the new graph
     submit_graph = st.button(
         "3. Generate Applicant Pool OVERVIEW (Graph)",
         type="secondary",
@@ -266,11 +243,9 @@ with col3:
         key="graph_btn"
     )
 
-# --- MAIN LOGIC ---
-
+#report
 if submit_full_report:
     if uploaded_files and input_text:
-        # ... (Full Report Logic - uses the enhanced calculate_match_percentage) ...
         for i, file in enumerate(uploaded_files):
             st.markdown(f"<h3 style='color: #007BFF;'>--- Analyzing Resume {i+1}: {file.name} ---</h3>", unsafe_allow_html=True) 
 
@@ -293,7 +268,7 @@ if submit_full_report:
     else:
         st.warning("Please upload at least one resume and provide a Job Description")
 
-# --- GRAPH LOGIC (New Block) ---
+#graph
 elif submit_graph:
     if uploaded_files and input_text:
         st.subheader(" Applicant Pool Distribution Overview")
@@ -304,7 +279,7 @@ elif submit_graph:
                 try:
                     resume_text = input_pdf_setup(file)
                     # Uses the newly accurate calculation
-                    percentage, _ = calculate_match_percentage(resume_text, input_text) 
+                    percentage, _ = calculate_match_percentage(resume_text, input_text)
                     summary_data.append({"Match Percentage (%)": percentage})
                 except Exception:
                     summary_data.append({"Match Percentage (%)": 0})
@@ -340,7 +315,7 @@ elif submit_graph:
         st.warning("Please upload at least one resume and provide a Job Description.")
 
 
-# --- SUMMARY TABLE LOGIC (Stable Filtering Fix) ---
+#percentage
 elif submit_summary_table:
     if uploaded_files and input_text:
         st.subheader(" Resume Match Percentage Summary")
@@ -351,13 +326,13 @@ elif submit_summary_table:
                 st.info(f"Processing Resume {i+1}: {file.name}")
                 try:
                     resume_text = input_pdf_setup(file)
-                    # Uses the newly accurate calculation
+                    
                     percentage, _ = calculate_match_percentage(resume_text, input_text)
                     
                     summary_data.append({
                         "Resume Number": i + 1,
                         "Resume File Name": file.name,
-                        "Match Percentage (%)": percentage # Consistent column name
+                        "Match Percentage (%)": percentage
                     })
 
                 except Exception:
@@ -367,24 +342,22 @@ elif submit_summary_table:
                         "Match Percentage (%)": 0
                     })
 
-            # --- Data Processing for Sorting and Filtering ---
+            #processing and sorting
             if summary_data:
-                # pandas import is at the top now
                 df = pd.DataFrame(summary_data)
                 
-                # 1. Sort the DataFrame by percentage match (Highest to Lowest)
+                # Sorting DataFrame by percentage match (Highest to Lowest)
                 df_sorted = df.sort_values(by="Match Percentage (%)", ascending=False).reset_index(drop=True)
                 
                 # Session State Initialization (for stable number input)
                 if 'top_n_candidates' not in st.session_state:
                     st.session_state['top_n_candidates'] = min(10, len(df_sorted))
                 
-                # 2. Add Filter Control
+                # Add Filter Control
                 st.markdown("---")
                 
                 filter_col, display_col = st.columns([1, 4])
                 
-                # This input updates st.session_state['top_n_candidates']
                 filter_col.number_input(
                     "Showing Top N Candidates:",
                     min_value=1,
@@ -394,14 +367,13 @@ elif submit_summary_table:
                     key='top_n_candidates'
                 )
                 
-                # *** STABLE FILTER FIX ***
                 # Read the stable value from the session state dictionary
                 N = st.session_state['top_n_candidates']
 
-                # 3. Apply the Top N Filter
+                # Applying the Top N Filter
                 df_filtered = df_sorted.head(N)
 
-                # 4. Display the Final Table
+                #Displaying the Final Table
                 display_col.dataframe(
                     df_filtered.style.format({"Match Percentage (%)": "{}%"}),
                     use_container_width=True,
