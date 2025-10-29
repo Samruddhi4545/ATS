@@ -124,7 +124,7 @@ def calculate_match_percentage(resume_text, job_description):
     jd_vector = tfidf_matrix[1].toarray()[0]
     top_jd_indices = jd_vector.argsort()[-20:][::-1]
     top_jd_keywords = [
-        feature_names[i] for i in top_jd_indices 
+        feature_names[i] for i in top_jd_indices
         if jd_vector[i] > 0.1 and feature_names[i] in processed_jd
     ]
     
@@ -232,7 +232,7 @@ with col1:
         key="full_report_btn",
         color="#1E88E5",
         hover_color="#1565C0"
-    ) 
+    )
 
 with col2:
     # Standard Streamlit button
