@@ -30,8 +30,13 @@ STOPWORDS = set(stopwords.words('english'))
 # Initialize Stemmer for linguistic normalization
 STEMMER = PorterStemmer()
 # Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
-CRITICAL_KEYWORDS = ["java", "javafx", "fxml", "scrum", "agile", "sql", "cloud", "management", "leadership"]
-
+# Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
+CRITICAL_KEYWORDS = [
+    "java", "javafx", "fxml", "scrum", "agile",
+    "sql", "cloud", "management", "leadership",
+    "RESTful API", "microservices", "unit testing",
+    "software development", "database", "AWS" # Expanded list
+]
 # --- UTILITY FUNCTIONS ---
 
 def custom_button(label, key, color="#1E88E5", hover_color="#1565C0"):
@@ -114,7 +119,7 @@ def calculate_match_percentage(resume_text, job_description):
             keyword_hits += 1
             
     # Apply a small bonus score for every critical keyword hit
-    bonus_score = keyword_hits * 5
+    bonus_score = keyword_hits * 10
     
     # Calculate Final Percentage (max 100)
     final_percentage = min(100, base_percentage + bonus_score)
