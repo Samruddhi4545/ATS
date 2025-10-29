@@ -209,7 +209,7 @@ def input_pdf_setup(uploaded_file):
 # --- STREAMLIT APP ---
     
 st.set_page_config(page_title="Classical ATS Expert", layout="wide")
-st.header("ATS Tracking System (Non-LLM) - Enhanced Accuracy")
+st.header("ATS Tracking System (Non-LLM)")
 
 # --- USER INPUTS ---
 input_text = st.text_area("Job Description: ", key='input', height=200,help="Paste the full job description here.")
