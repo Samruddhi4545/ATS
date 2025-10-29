@@ -31,12 +31,14 @@ STOPWORDS = set(stopwords.words('english'))
 STEMMER = PorterStemmer()
 # Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
 # Critical keywords for the Hybrid Score Boost (e.g., from your JavaFX context)
-CRITICAL_KEYWORDS = [
-    "java", "javafx", "fxml", "scrum", "agile",
-    "sql", "cloud", "management", "leadership",
-    "RESTful API", "microservices", "unit testing",
-    "software development", "database", "AWS" # Expanded list
-]
+CRITICAL_KEYWORDS = {
+    "DATA_STORAGE": ["sql", "database", "mongodb", "mysql", "nosql"],
+    "AGILE_METHOD": ["scrum", "agile", "kanban", "sprint"],
+    "JAVAFX_UI": ["java", "javafx", "fxml", "gui", "swing"],
+    "CLOUD_OPS": ["aws", "cloud", "docker", "kubernetes", "azure"]
+}
+GROUP_BONUS = 50 # A major score boost per category
+
 # --- UTILITY FUNCTIONS ---
 
 def custom_button(label, key, color="#1E88E5", hover_color="#1565C0"):
@@ -100,8 +102,8 @@ def calculate_match_percentage(resume_text, job_description):
     
     # --- ACCURACY BOOST: N-GRAMS & FEATURE CAPACITY ---
     vectorizer = TfidfVectorizer(
-        max_features=2500, # Increased capacity
-        ngram_range=(1, 2) # Capture single words and two-word phrases (e.g., 'deep learning')
+        max_features=5000, # Increased capacity
+        ngram_range=(1, 3) # Capture single words and two-word phrases (e.g., 'deep learning')
     )
     tfidf_matrix = vectorizer.fit_transform(documents)
     
@@ -110,17 +112,24 @@ def calculate_match_percentage(resume_text, job_description):
     base_percentage = round(similarity_score * 100)
     
     # --- ACCURACY BOOST: HYBRID SCORING (KEYWORD BOOST) ---
-    resume_words = set(processed_resume.split())
+    resume_processed_words = set(processed_resume.split())
     
-    keyword_hits = 0
-    for keyword in CRITICAL_KEYWORDS:
-        # Check if the stemmed version of the critical keyword is present
-        if STEMMER.stem(keyword.lower()) in resume_words:
-            keyword_hits += 1
-            
-    # Apply a small bonus score for every critical keyword hit
-    bonus_score = keyword_hits * 10
+    group_hits = 0
+    found_groups = set()
     
+    # Iterate through groups and check if any stemmed word in the resume matches any group keyword
+    for group_name, keywords in CRITICAL_KEYWORDS.items():
+        if group_name not in found_groups:
+            for keyword in keywords:
+                if STEMMER.stem(keyword.lower()) in resume_processed_words:
+                    group_hits += 1
+                    found_groups.add(group_name) # Ensures we only count one bonus per category
+                    break
+
+    # Now, calculate bonus based on group hits, not individual word hits
+    # This rewards candidates who demonstrate skills in a required domain.
+    bonus_score = group_hits * GROUP_BONUS
+
     # Calculate Final Percentage (max 100)
     final_percentage = min(100, base_percentage + bonus_score)
 
