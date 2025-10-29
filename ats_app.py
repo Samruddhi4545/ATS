@@ -157,6 +157,7 @@ uploaded_files = st.file_uploader(
 
 submit_full_report = st.button("Generate Full Report for All Results")
 submit_summary_table = st.button("Generate Percentage Summary Table")
+submit_graph = st.button("Generate Applicant Pool OVERVIEW (Graph)")
 
 # --- MAIN LOGIC ---
 
@@ -258,6 +259,55 @@ elif submit_summary_table:
                 
                 st.success(f"Displaying the top {len(df_filtered)} candidates based on Match Percentage.")
             
+            else:
+                st.error("No valid resumes were processed.")
+    else:
+        st.warning("Please upload at least one resume and provide a Job Description.")
+elif submit_graph:
+    if uploaded_files and input_text:
+        st.subheader("Applicant Pool Distribution Overview")
+        summary_data = []
+
+        with st.spinner('Calculating all match scores for visualization...'):
+            # --- Data Processing (Must repeat this block) ---
+            for i, file in enumerate(uploaded_files):
+                try:
+                    resume_text = input_pdf_setup(file)
+                    percentage, _ = calculate_match_percentage(resume_text, input_text)
+                    summary_data.append({"Match Percentage (%)": percentage})
+                except Exception:
+                    summary_data.append({"Match Percentage (%)": 0})
+            
+            if summary_data:
+                import pandas as pd
+                import matplotlib.pyplot as plt
+                
+                df = pd.DataFrame(summary_data)
+                
+                # --- GRAPH GENERATION ---
+                
+                st.markdown("### Match Score Distribution")
+                
+                fig, ax = plt.subplots(figsize=(10, 5)) # Slightly larger graph
+                
+                # Plot a histogram to show the distribution of scores
+                ax.hist(
+                    df['Match Percentage (%)'],
+                    bins=10, 
+                    edgecolor='black',
+                    color='#32CD32' # Bright green for visibility
+                )
+                
+                ax.set_title('Distribution of Applicant Match Scores', fontsize=16)
+                ax.set_xlabel('Match Percentage (%)', fontsize=14)
+                ax.set_ylabel('Number of Applicants', fontsize=14)
+                ax.set_xticks(range(0, 101, 10))
+                ax.grid(axis='y', alpha=0.5)
+                
+                st.pyplot(fig)
+                plt.close(fig)
+                
+                st.success(f"Graph generated successfully for {len(df)} applicants.")
             else:
                 st.error("No valid resumes were processed.")
     else:
