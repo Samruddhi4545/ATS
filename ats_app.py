@@ -237,11 +237,11 @@ elif submit_summary_table:
                 
                 # Get the number of top candidates to display (N)
                 N = filter_col.number_input(
-                    "Show Top N Candidates:",
+                    "Showing Candidates in sorted order:",
                     min_value=1,
                     max_value=len(df_sorted),
                     value=st.session_state['top_n_candidates'],
-                    step=1,
+                    step=2,
                     key='top_n_candidates'
                 )
                 
