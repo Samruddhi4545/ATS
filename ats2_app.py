@@ -114,7 +114,7 @@ def calculate_match_percentage(resume_text, job_description):
             keyword_hits += 1
             
     # Apply a small bonus score for every critical keyword hit
-    bonus_score = keyword_hits * 2
+    bonus_score = keyword_hits * 5
     
     # Calculate Final Percentage (max 100)
     final_percentage = min(100, base_percentage + bonus_score)
