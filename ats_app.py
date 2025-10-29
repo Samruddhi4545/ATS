@@ -154,11 +154,9 @@ uploaded_files = st.file_uploader(
 )
 
 # --- SUBMISSION BUTTONS (COLORIZED) ---
-col1, col2 = st.columns(2)
-with col1:
-    submit_full_report = st.button("Generate Full Report for All Resumes")
-with col2:
-    submit_summary_table = st.button("Generate Percentage Summary Table")
+
+submit_full_report = st.button("Generate Full Report for All Results")
+submit_summary_table = st.button("Generate Percentage Summary Table")
 
 # --- MAIN LOGIC ---
 
@@ -187,39 +185,75 @@ if submit_full_report:
                     st.error(f"An error occurred while processing **{file.name}**. Check dependencies: {e}")
                     
     else:
-        st.warning("Please upload at least one resume and provide a Job Description.")
+        st.warning("Please upload at least one resume and provide a Job Description")
 
 # --- SUMMARY TABLE LOGIC ---
 elif submit_summary_table:
     if uploaded_files and input_text:
-        st.subheader("Resume Match Percentage Summary")
+        st.subheader(" Resume Match Percentage Summary")
         summary_data = []
-        
+
         with st.spinner('Generating summary table using Cosine Similarity...'):
             for i, file in enumerate(uploaded_files):
                 st.info(f"Processing Resume {i+1}: {file.name}")
                 try:
+                    # Get raw text from PDF using OCR/CV
                     resume_text = input_pdf_setup(file)
-                    
+
                     # Get the percentage only (ML)
                     percentage, _ = calculate_match_percentage(resume_text, input_text)
                     
+                    # Store data as dictionaries
                     summary_data.append({
                         "Resume Number": i + 1,
                         "Resume File Name": file.name,
-                        "Match Percentage": f"{percentage}%"
+                        # Store as integer for easy sorting later
+                        "Match Percentage(%)": percentage
                     })
-                    
+
                 except Exception:
                     summary_data.append({
                         "Resume Number": i + 1,
                         "Resume File Name": file.name,
-                        "Match Percentage": "Error (OCR/ML Failed)"
+                        "Match Percentage(%)": 0 # Use 0 or -1 for sorting errors to push them to the bottom
                     })
 
+            # --- Data Processing for Sorting and Filtering ---
             if summary_data:
-                st.dataframe(summary_data, use_container_width=True)
-                st.success("Summary table generated successfully using classical ML.")
+                import pandas as pd
+                df = pd.DataFrame(summary_data)
+                
+                # 1. Sort the DataFrame by percentage match (Highest to Lowest)
+                df_sorted = df.sort_values(by="Match Percentage(%)", ascending=False).reset_index(drop=True)
+                
+                # 2. Add Filter Control
+                st.markdown("---")
+                
+                # Use a sidebar or a column for filtering controls
+                filter_col, display_col = st.columns([1, 4])
+                
+                # Get the number of top candidates to display (N)
+                N = filter_col.number_input(
+                    "Show Top N Candidates:",
+                    min_value=1,
+                    max_value=len(df_sorted),
+                    value=min(10, len(df_sorted)), # Default to showing max 10
+                    step=1
+                )
+                
+                # 3. Apply the Top N Filter
+                df_filtered = df_sorted.head(N)
+
+                # 4. Display the Final Table
+                display_col.dataframe(
+                    df_filtered.style.format({"Match Percentage(%)": "{}%"}), # Format as percentage string for display
+                    use_container_width=True,
+                    # Allows Streamlit to offer interactive sorting/filtering on columns
+                    # This feature is now available in modern Streamlit versions.
+                )
+                
+                st.success(f"Displaying the top {len(df_filtered)} candidates based on Match Percentage.")
+            
             else:
                 st.error("No valid resumes were processed.")
     else:
