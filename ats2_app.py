@@ -204,8 +204,8 @@ def input_pdf_setup(uploaded_file):
         raise FileNotFoundError("No file uploaded")
     
     
-st.set_page_config(page_title="Classical ATS Expert", layout="wide")
-st.header("ATS Tracking System (Non-LLM)")
+st.set_page_config(page_title="ATS Expert", layout="wide")
+st.header("Applicant Tracking System")
 
 input_text = st.text_area("Job Description: ", key='input', height=200,help="Paste the full job description here.")
 
