@@ -209,7 +209,7 @@ elif submit_summary_table:
                         "Resume Number": i + 1,
                         "Resume File Name": file.name,
                         # Store as integer for easy sorting later
-                        "Match Percentage(%)": percentage
+                        "Match Percentage(%)": percentage#type:ignore
                     })
 
                 except Exception:

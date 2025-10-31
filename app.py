@@ -75,9 +75,9 @@ elif uploaded_files is None:
 
 # Prompt for professional HR evaluation
 input_prompt1 = """
-You are an experienced HR professional. Your task is to review the provided resume against the job description. 
-Please share your professional evaluation on whether the candidate's profile aligns with the role. 
-Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements. 
+You are an experienced HR professional. Your task is to review the provided resume against the job description.
+Please share your professional evaluation on whether the candidate's profile aligns with the role.
+Highlight the strengths and weaknesses of the applicant in relation to the specified job requirements.
 Provide your response in a clear, concise format using bullet points.
 """
 
